@@ -4,6 +4,8 @@
 #include "screen/screen.hpp"
 #include "soc/clk_tree_defs.h"
 #include "soc/gpio_num.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 i2c_master_bus_handle_t i2c_bus_handler = nullptr;
 
@@ -15,5 +17,11 @@ extern "C" void app_main(void) {
                                   GPIO_NUM_4, true);
 
   ssd13068_screen.init_lcd_panel(i2c_bus_handler);
-  ssd13068_screen.render_bitmap(0, 0, EXCITED_FACE);
+
+  int face_index = 0;
+  while (true) {
+    ssd13068_screen.render_bitmap(0, 0, ALL_FACES[face_index]);
+    face_index = (face_index + 1) % FACE_COUNT;
+    vTaskDelay(pdMS_TO_TICKS(500));
+  }
 }

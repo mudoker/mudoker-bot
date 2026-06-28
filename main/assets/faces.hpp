@@ -6,4 +6,5 @@ struct BitmapAsset {
     const unsigned char* data;
 };
 
-extern const BitmapAsset EXCITED_FACE;
+extern const BitmapAsset ALL_FACES[];
+extern const int FACE_COUNT;
