@@ -61,12 +61,6 @@ public:
 
     ESP_ERROR_CHECK(esp_lcd_panel_reset(panel_handler));
     ESP_ERROR_CHECK(esp_lcd_panel_init(panel_handler));
-
-    // Fix bitmap orientation: mirror X/Y and swap axes as needed for the
-    // physical OLED mounting. Toggle these if the image is still distorted.
-    ESP_ERROR_CHECK(esp_lcd_panel_mirror(panel_handler, true, false));
-    ESP_ERROR_CHECK(esp_lcd_panel_swap_xy(panel_handler, false));
-
     ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(panel_handler, true));
   }
 
