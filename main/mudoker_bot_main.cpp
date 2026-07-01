@@ -22,9 +22,9 @@ extern "C" void app_main(void) {
 
   ssd13068_screen.init_lcd_panel(i2c_bus_handler);
 
-  servo_manager.init_servo_timer(0, MCPWM_TIMER_CLK_SRC_DEFAULT, 1000000, 20000, MCPWM_TIMER_COUNT_MODE_UP);
+  servo_manager.init_servo_timer();
   for (int i = 0; i < sizeof(servo_pins) / sizeof(servo_pins[0]); i++) {
-    servo_manager.attach_servo(0, i);
+    servo_manager.attach_servo(i);
   }
 
   int face_index = 0;
@@ -32,7 +32,7 @@ extern "C" void app_main(void) {
   int servo_index = 0;
   while (true) {
     show_face(&face_index);
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(100));
     set_servo_angle(&servo_index, &servo_angle);
   }
 }
