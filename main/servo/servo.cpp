@@ -1,7 +1,16 @@
 #include "servo.hpp"
 #include "soc/gpio_num.h"
 
-int servo_pins[SERVO_CNT] = {GPIO_NUM_18, GPIO_NUM_9};
+int servo_pins[SERVO_CNT] = {
+    GPIO_NUM_18, // Servo 1 (Left side pin)
+    GPIO_NUM_1,  // Servo 2 (Right side pin)
+    GPIO_NUM_9,  // Servo 3 (Left side pin)
+    GPIO_NUM_2,  // Servo 4 (Right side pin)
+    GPIO_NUM_10, // Servo 5 (Left side pin)
+    GPIO_NUM_21, // Servo 6 (Right side pin)
+    GPIO_NUM_11, // Servo 7 (Left side pin)
+    GPIO_NUM_47  // Servo 8 (Right side pin)
+};
 
 int convert_degree_to_pulse_width(int degree) {
   if (degree < 0) {

@@ -14,7 +14,7 @@ SSD1306Screen ssd13068_screen;
 ServoManager servo_manager;
 
 void show_face(int *face_index);
-void set_servo_angle(int *servo_index, int *angle);
+void set_all_servos_angle(int *angle);
 
 extern "C" void app_main(void) {
   i2c_manager.init_i2c_master_bus(I2C_CLK_SRC_DEFAULT, I2C_NUM_0, GPIO_NUM_5,
@@ -29,11 +29,14 @@ extern "C" void app_main(void) {
 
   int face_index = 0;
   int servo_angle = 0;
-  int servo_index = 0;
+  int tick_count = 0;
   while (true) {
-    show_face(&face_index);
+    if (tick_count % 10 == 0) {
+      show_face(&face_index);
+    }
+    set_all_servos_angle(&servo_angle);
     vTaskDelay(pdMS_TO_TICKS(100));
-    set_servo_angle(&servo_index, &servo_angle);
+    tick_count++;
   }
 }
 
@@ -47,8 +50,10 @@ void show_face(int *face_index) {
   *face_index = (*face_index + 1) % FACE_COUNT;
 }
 
-void set_servo_angle(int *servo_index, int *angle) {
-  servo_manager.set_servo_angle(*servo_index, *angle);
-  *servo_index = (*servo_index + 1) % SERVO_CNT;
-  *angle = (*angle + 30) % 180;
+void set_all_servos_angle(int *angle) {
+  for (int i = 0; i < SERVO_CNT; i++) {
+    int offset_angle = (*angle + i * 20) % 180;
+    servo_manager.set_servo_angle(i, offset_angle);
+  }
+  *angle = (*angle + 15) % 180;
 }

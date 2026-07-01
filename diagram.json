@@ -20,17 +20,65 @@
     {
       "type": "wokwi-servo",
       "id": "servo1",
-      "top": 227.6,
-      "left": -333.2,
+      "top": -200,
+      "left": -300,
       "rotate": 180,
       "attrs": {}
     },
     {
       "type": "wokwi-servo",
       "id": "servo2",
-      "top": 102.8,
-      "left": -323.6,
+      "top": -200,
+      "left": 300,
+      "rotate": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo3",
+      "top": -50,
+      "left": -300,
       "rotate": 180,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo4",
+      "top": -50,
+      "left": 300,
+      "rotate": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo5",
+      "top": 100,
+      "left": -300,
+      "rotate": 180,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo6",
+      "top": 100,
+      "left": 300,
+      "rotate": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo7",
+      "top": 250,
+      "left": -300,
+      "rotate": 180,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo8",
+      "top": 250,
+      "left": 300,
+      "rotate": 0,
       "attrs": {}
     }
   ],
@@ -41,12 +89,30 @@
     [ "oled1:GND", "esp:GND.2", "black", [ "v-19.2", "h-57.6", "v124.8", "h115.2" ] ],
     [ "oled1:SCL", "esp:4", "green", [ "v-38.4", "h-95.7", "v211.2" ] ],
     [ "oled1:SDA", "esp:5", "gold", [ "v-48", "h-115.13", "v230.4" ] ],
-    [ "servo2:V+", "esp:5V", "red", [ "h57.6", "v57.5" ] ],
-    [ "servo1:V+", "esp:5V", "red", [ "h67.2", "v-67.3" ] ],
-    [ "servo2:GND", "esp:GND.1", "#8f4814", [ "h28.8", "v57.6" ] ],
-    [ "servo1:GND", "esp:GND.1", "#8f4814", [ "h38.4", "v-67.2" ] ],
-    [ "servo2:PWM", "esp:18", "orange", [ "h0" ] ],
-    [ "servo1:PWM", "esp:9", "orange", [ "h105.6", "v-115.4" ] ]
+    [ "servo1:V+", "esp:5V", "red", [] ],
+    [ "servo2:V+", "esp:5V", "red", [] ],
+    [ "servo3:V+", "esp:5V", "red", [] ],
+    [ "servo4:V+", "esp:5V", "red", [] ],
+    [ "servo5:V+", "esp:5V", "red", [] ],
+    [ "servo6:V+", "esp:5V", "red", [] ],
+    [ "servo7:V+", "esp:5V", "red", [] ],
+    [ "servo8:V+", "esp:5V", "red", [] ],
+    [ "servo1:GND", "esp:GND.1", "#8f4814", [] ],
+    [ "servo2:GND", "esp:GND.1", "#8f4814", [] ],
+    [ "servo3:GND", "esp:GND.1", "#8f4814", [] ],
+    [ "servo4:GND", "esp:GND.1", "#8f4814", [] ],
+    [ "servo5:GND", "esp:GND.1", "#8f4814", [] ],
+    [ "servo6:GND", "esp:GND.1", "#8f4814", [] ],
+    [ "servo7:GND", "esp:GND.1", "#8f4814", [] ],
+    [ "servo8:GND", "esp:GND.1", "#8f4814", [] ],
+    [ "servo1:PWM", "esp:18", "orange", [] ],
+    [ "servo2:PWM", "esp:1", "orange", [] ],
+    [ "servo3:PWM", "esp:9", "orange", [] ],
+    [ "servo4:PWM", "esp:2", "orange", [] ],
+    [ "servo5:PWM", "esp:10", "orange", [] ],
+    [ "servo6:PWM", "esp:21", "orange", [] ],
+    [ "servo7:PWM", "esp:11", "orange", [] ],
+    [ "servo8:PWM", "esp:47", "orange", [] ]
   ],
   "dependencies": {}
 }
