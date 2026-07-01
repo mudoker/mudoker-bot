@@ -49,15 +49,15 @@ public:
   inline void init_lcd_panel(i2c_master_bus_handle_t i2c_handler) {
     esp_lcd_panel_io_i2c_config_t io_config = init_io_i2c_config();
 
-    esp_lcd_panel_io_handle_t io_handle = nullptr;
+    esp_lcd_panel_io_handle_t io_handler = nullptr;
     
     ESP_ERROR_CHECK(
-        esp_lcd_new_panel_io_i2c(i2c_handler, &io_config, &io_handle));
+        esp_lcd_new_panel_io_i2c(i2c_handler, &io_config, &io_handler));
 
     esp_lcd_panel_dev_config_t panel_config = init_panel_config();
     
     ESP_ERROR_CHECK(
-        esp_lcd_new_panel_ssd1306(io_handle, &panel_config, &panel_handler));
+        esp_lcd_new_panel_ssd1306(io_handler, &panel_config, &panel_handler));
 
     ESP_ERROR_CHECK(esp_lcd_panel_reset(panel_handler));
     ESP_ERROR_CHECK(esp_lcd_panel_init(panel_handler));
