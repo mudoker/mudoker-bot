@@ -1,12 +1,10 @@
 #pragma once
 
-#include "driver/mcpwm_gen.h"
-#include "driver/mcpwm_prelude.h"
-#include "driver/mcpwm_timer.h"
+#include "driver/ledc.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "hal/mcpwm_types.h"
+#include "hal/ledc_types.h"
 
 #define SERVO_MIN_PULSE_WIDTH 500
 #define SERVO_NEUTRAL_PULSE_WIDTH 1500
@@ -17,117 +15,45 @@
 #define SERVO_CNT 2
 
 extern int servo_pins[SERVO_CNT];
-extern mcpwm_cmpr_handle_t pwm_comparator_handles[SERVO_CNT];
 
 int convert_degree_to_pulse_width(int degree);
 
 class ServoManager {
-private:
-  mcpwm_gen_handle_t pwm_generator_handles[SERVO_CNT] = {nullptr};
-  mcpwm_timer_handle_t pwm_timer_handle = nullptr;
-  inline void init_pwm_timer(int group_id, mcpwm_timer_clock_source_t clk_src,
-                             int resolution_hz, int period_ticks,
-                             mcpwm_timer_count_mode_t count_mode) {
-    mcpwm_timer_config_t pwm_timer_config = {};
-    memset(&pwm_timer_config, 0, sizeof(pwm_timer_config));
-    pwm_timer_config.group_id = group_id;
-    pwm_timer_config.clk_src = clk_src;
-    pwm_timer_config.resolution_hz = resolution_hz;
-    pwm_timer_config.period_ticks = period_ticks;
-    pwm_timer_config.count_mode = count_mode;
-
-    ESP_ERROR_CHECK(mcpwm_new_timer(&pwm_timer_config, &pwm_timer_handle));
-  }
-
-  inline mcpwm_oper_handle_t
-  init_pwm_operator(mcpwm_timer_handle_t pwm_timer_handle, int group_id) {
-    mcpwm_operator_config_t pwm_operator_config = {};
-    pwm_operator_config.group_id = group_id;
-
-    mcpwm_oper_handle_t pwm_operator_handle = nullptr;
-    ESP_ERROR_CHECK(
-        mcpwm_new_operator(&pwm_operator_config, &pwm_operator_handle));
-    ESP_ERROR_CHECK(
-        mcpwm_operator_connect_timer(pwm_operator_handle, pwm_timer_handle));
-
-    return pwm_operator_handle;
-  }
-
-  inline mcpwm_gen_handle_t
-  init_pwm_generator(mcpwm_oper_handle_t pwm_operator_handle, int servo_index) {
-    mcpwm_generator_config_t pwm_generator_config = {};
-    pwm_generator_config.gen_gpio_num = servo_pins[servo_index];
-
-    mcpwm_gen_handle_t pwm_generator_handle = nullptr;
-    ESP_ERROR_CHECK(mcpwm_new_generator(
-        pwm_operator_handle, &pwm_generator_config, &pwm_generator_handle));
-    return pwm_generator_handle;
-  }
-
-  inline mcpwm_cmpr_handle_t
-  init_comparator(mcpwm_oper_handle_t pwm_operator_handle) {
-    mcpwm_comparator_config_t pwm_comparator_config = {};
-    pwm_comparator_config.flags.update_cmp_on_tez = true;
-
-    mcpwm_cmpr_handle_t pwm_comparator_handle = nullptr;
-    ESP_ERROR_CHECK(mcpwm_new_comparator(
-        pwm_operator_handle, &pwm_comparator_config, &pwm_comparator_handle));
-    return pwm_comparator_handle;
-  }
-
 public:
   virtual ~ServoManager() = default;
   void set_servo_angle(int servo_index, int angle);
-  inline void init_servo_timer(int group_id, mcpwm_timer_clock_source_t clk_src,
-                               int resolution_hz, int period_ticks,
-                               mcpwm_timer_count_mode_t count_mode,
-                               int servo_index = 0) {
-    ESP_LOGI("SERVO", "Initialising Servo Group %d...", group_id);
 
-    init_pwm_timer(group_id, clk_src, resolution_hz, period_ticks, count_mode);
+  inline void init_servo_timer() {
+    ESP_LOGI("SERVO", "Initialising LEDC Timer for Servo...");
 
-    ESP_ERROR_CHECK(mcpwm_timer_enable(pwm_timer_handle));
-    ESP_ERROR_CHECK(
-        mcpwm_timer_start_stop(pwm_timer_handle, MCPWM_TIMER_START_NO_STOP));
+    ledc_timer_config_t ledc_timer = {};
+    ledc_timer.speed_mode       = LEDC_LOW_SPEED_MODE;
+    ledc_timer.duty_resolution  = LEDC_TIMER_13_BIT;
+    ledc_timer.timer_num        = LEDC_TIMER_0;
+    ledc_timer.freq_hz          = 50;
+    ledc_timer.clk_cfg          = LEDC_AUTO_CLK;
 
-    ESP_LOGI("SERVO", "Servo Timer Group %d Initialisation Success...",
-             group_id);
+    ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
+    ESP_LOGI("SERVO", "LEDC Timer Initialised Successfully.");
   }
 
-  inline void attach_servo(int group_id, int servo_index) {
-    ESP_LOGI("SERVO", "Attaching Servo %d to Group %d...", servo_index,
-             group_id);
+  inline void attach_servo(int servo_index) {
+    if (servo_index < 0 || servo_index >= SERVO_CNT) {
+      ESP_LOGE("SERVO", "Invalid servo index: %d", servo_index);
+      return;
+    }
 
-    mcpwm_oper_handle_t pwm_operator_handle =
-        init_pwm_operator(pwm_timer_handle, group_id);
+    ESP_LOGI("SERVO", "Attaching Servo %d (Pin %d)...", servo_index, servo_pins[servo_index]);
 
-    pwm_generator_handles[servo_index] =
-        init_pwm_generator(pwm_operator_handle, servo_index);
-    pwm_comparator_handles[servo_index] = init_comparator(pwm_operator_handle);
+    ledc_channel_config_t ledc_channel = {};
+    ledc_channel.gpio_num       = servo_pins[servo_index];
+    ledc_channel.speed_mode     = LEDC_LOW_SPEED_MODE;
+    ledc_channel.channel        = (ledc_channel_t)servo_index;
+    ledc_channel.timer_sel      = LEDC_TIMER_0;
+    ledc_channel.duty           = 0;
+    ledc_channel.hpoint         = 0;
 
-    ESP_ERROR_CHECK(mcpwm_generator_set_action_on_timer_event(
-        pwm_generator_handles[servo_index],
-        MCPWM_GEN_TIMER_EVENT_ACTION(MCPWM_TIMER_DIRECTION_UP,
-                                     MCPWM_TIMER_EVENT_EMPTY,
-                                     MCPWM_GEN_ACTION_HIGH)));
-
-    ESP_ERROR_CHECK(mcpwm_generator_set_action_on_compare_event(
-        pwm_generator_handles[servo_index],
-        MCPWM_GEN_COMPARE_EVENT_ACTION(MCPWM_TIMER_DIRECTION_UP,
-                                       pwm_comparator_handles[servo_index],
-                                       MCPWM_GEN_ACTION_LOW)));
-
-    ESP_LOGI("SERVO", "Servo %d Attached to Group %d Successfully...",
-             servo_index, group_id);
-  }
-
-  virtual void start_timer() {
-    ESP_ERROR_CHECK(
-        mcpwm_timer_start_stop(pwm_timer_handle, MCPWM_TIMER_START_NO_STOP));
-  }
-
-  virtual void stop_timer() {
-    ESP_ERROR_CHECK(
-        mcpwm_timer_start_stop(pwm_timer_handle, MCPWM_TIMER_STOP_EMPTY));
+    ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+    ESP_LOGI("SERVO", "Servo %d Attached Successfully.", servo_index);
   }
 };

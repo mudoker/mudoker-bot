@@ -1,8 +1,7 @@
 #include "servo.hpp"
 #include "soc/gpio_num.h"
 
-int servo_pins[SERVO_CNT] = {GPIO_NUM_46, GPIO_NUM_9};
-mcpwm_cmpr_handle_t pwm_comparator_handles[SERVO_CNT] = {nullptr};
+int servo_pins[SERVO_CNT] = {GPIO_NUM_18, GPIO_NUM_9};
 
 int convert_degree_to_pulse_width(int degree) {
   if (degree < 0) {
@@ -34,6 +33,9 @@ void ServoManager::set_servo_angle(int servo_index, int angle) {
 
   ESP_LOGI("SERVO", "Setting Servo %d Angle to %d degrees...", servo_index, angle);
   int pulse_width = convert_degree_to_pulse_width(angle);
-  ESP_ERROR_CHECK(
-      mcpwm_comparator_set_compare_value(pwm_comparator_handles[servo_index], pulse_width));
+
+  uint32_t duty = (pulse_width * 8192) / 20000;
+
+  ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, (ledc_channel_t)servo_index, duty));
+  ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, (ledc_channel_t)servo_index));
 }
