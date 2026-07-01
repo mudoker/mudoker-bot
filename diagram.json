@@ -45,7 +45,7 @@
     [ "servo1:V+", "esp:5V", "red", [ "h67.2", "v-67.3" ] ],
     [ "servo2:GND", "esp:GND.1", "#8f4814", [ "h28.8", "v57.6" ] ],
     [ "servo1:GND", "esp:GND.1", "#8f4814", [ "h38.4", "v-67.2" ] ],
-    [ "servo2:PWM", "esp:46", "orange", [ "h0" ] ],
+    [ "servo2:PWM", "esp:18", "orange", [ "h0" ] ],
     [ "servo1:PWM", "esp:9", "orange", [ "h105.6", "v-115.4" ] ]
   ],
   "dependencies": {}
