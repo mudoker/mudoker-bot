@@ -12,7 +12,7 @@
 #define PULSE_WIDTH_RANGE (SERVO_MAX_PULSE_WIDTH - SERVO_MIN_PULSE_WIDTH)
 #define PULSE_WIDTH_BUFFER 100
 #define SERVO_MAX_DEGREE 180
-#define SERVO_CNT 8
+#define SERVO_CNT 1
 
 extern int servo_pins[SERVO_CNT];
 
@@ -31,7 +31,7 @@ public:
     ledc_timer.duty_resolution  = LEDC_TIMER_13_BIT;
     ledc_timer.timer_num        = LEDC_TIMER_0;
     ledc_timer.freq_hz          = 50;
-    ledc_timer.clk_cfg          = LEDC_AUTO_CLK;
+    ledc_timer.clk_cfg          = LEDC_USE_APB_CLK;
 
     ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
     ESP_LOGI("SERVO", "LEDC Timer Initialised Successfully.");

@@ -2,14 +2,14 @@
 #include "soc/gpio_num.h"
 
 int servo_pins[SERVO_CNT] = {
-    GPIO_NUM_18, // Servo 1 (Left side pin)
-    GPIO_NUM_1,  // Servo 2 (Right side pin)
-    GPIO_NUM_9,  // Servo 3 (Left side pin)
-    GPIO_NUM_2,  // Servo 4 (Right side pin)
-    GPIO_NUM_10, // Servo 5 (Left side pin)
-    GPIO_NUM_21, // Servo 6 (Right side pin)
-    GPIO_NUM_11, // Servo 7 (Left side pin)
-    GPIO_NUM_47  // Servo 8 (Right side pin)
+    GPIO_NUM_14, // Servo 1 (Left side pin)
+    // GPIO_NUM_1,  // Servo 2 (Right side pin) - commented out
+    // GPIO_NUM_9,  // Servo 3 (Left side pin) - commented out
+    // GPIO_NUM_2,  // Servo 4 (Right side pin) - commented out
+    // GPIO_NUM_10, // Servo 5 (Left side pin) - commented out
+    // GPIO_NUM_21, // Servo 6 (Right side pin) - commented out
+    // GPIO_NUM_11, // Servo 7 (Left side pin) - commented out
+    // GPIO_NUM_42  // Servo 8 (Right side pin) - commented out
 };
 
 int convert_degree_to_pulse_width(int degree) {
@@ -43,6 +43,8 @@ void ServoManager::set_servo_angle(int servo_index, int angle) {
   ESP_LOGI("SERVO", "Setting Servo %d Angle to %d degrees...", servo_index, angle);
   int pulse_width = convert_degree_to_pulse_width(angle);
 
+  // Calculate duty cycle: 13-bit resolution (0 to 8191) for 20ms period (50Hz)
+  // duty = (pulse_width * 8192) / 20000
   uint32_t duty = (pulse_width * 8192) / 20000;
 
   ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, (ledc_channel_t)servo_index, duty));
