@@ -8,6 +8,9 @@ esp_lcd_panel_handle_t panel_handler = nullptr;
 
 void ScreenManager::render_bitmap(int offset_x, int offset_y,
                                   const BitmapAsset &asset) {
+  if (panel_handler == nullptr) {
+    return;
+  }
   int x_start = offset_x;
   int y_start = offset_y;
   int x_end = offset_x + asset.width;

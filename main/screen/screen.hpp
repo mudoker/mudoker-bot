@@ -51,17 +51,42 @@ public:
 
     esp_lcd_panel_io_handle_t io_handler = nullptr;
     
-    ESP_ERROR_CHECK(
-        esp_lcd_new_panel_io_i2c(i2c_handler, &io_config, &io_handler));
+    esp_err_t ret = esp_lcd_new_panel_io_i2c(i2c_handler, &io_config, &io_handler);
+    ESP_ERROR_CHECK_WITHOUT_ABORT(ret);
+    if (ret != ESP_OK) {
+      panel_handler = nullptr;
+      return;
+    }
 
     esp_lcd_panel_dev_config_t panel_config = init_panel_config();
     
-    ESP_ERROR_CHECK(
-        esp_lcd_new_panel_ssd1306(io_handler, &panel_config, &panel_handler));
+    ret = esp_lcd_new_panel_ssd1306(io_handler, &panel_config, &panel_handler);
+    ESP_ERROR_CHECK_WITHOUT_ABORT(ret);
+    if (ret != ESP_OK) {
+      panel_handler = nullptr;
+      return;
+    }
 
-    ESP_ERROR_CHECK(esp_lcd_panel_reset(panel_handler));
-    ESP_ERROR_CHECK(esp_lcd_panel_init(panel_handler));
-    ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(panel_handler, true));
+    ret = esp_lcd_panel_reset(panel_handler);
+    ESP_ERROR_CHECK_WITHOUT_ABORT(ret);
+    if (ret != ESP_OK) {
+      panel_handler = nullptr;
+      return;
+    }
+
+    ret = esp_lcd_panel_init(panel_handler);
+    ESP_ERROR_CHECK_WITHOUT_ABORT(ret);
+    if (ret != ESP_OK) {
+      panel_handler = nullptr;
+      return;
+    }
+
+    ret = esp_lcd_panel_disp_on_off(panel_handler, true);
+    ESP_ERROR_CHECK_WITHOUT_ABORT(ret);
+    if (ret != ESP_OK) {
+      panel_handler = nullptr;
+      return;
+    }
   }
 
   void render_bitmap(int offset_x, int offset_y, const BitmapAsset& asset);
