@@ -2,14 +2,14 @@
 #include "soc/gpio_num.h"
 
 int servo_pins[SERVO_CNT] = {
-    GPIO_NUM_14, // Servo 1 (Left side pin)
-    // GPIO_NUM_1,  // Servo 2 (Right side pin) - commented out
-    // GPIO_NUM_9,  // Servo 3 (Left side pin) - commented out
-    // GPIO_NUM_2,  // Servo 4 (Right side pin) - commented out
-    // GPIO_NUM_10, // Servo 5 (Left side pin) - commented out
-    // GPIO_NUM_21, // Servo 6 (Right side pin) - commented out
-    // GPIO_NUM_11, // Servo 7 (Left side pin) - commented out
-    // GPIO_NUM_42  // Servo 8 (Right side pin) - commented out
+    GPIO_NUM_1,  // Servo 1 (J3 Pin 5)
+    GPIO_NUM_2,  // Servo 2 (J3 Pin 6)
+    GPIO_NUM_42, // Servo 3 (J3 Pin 7)
+    GPIO_NUM_41, // Servo 4 (J3 Pin 8)
+    GPIO_NUM_40, // Servo 5 (J3 Pin 9)
+    GPIO_NUM_39, // Servo 6 (J3 Pin 10)
+    GPIO_NUM_38, // Servo 7 (J3 Pin 11)
+    GPIO_NUM_37  // Servo 8 (J3 Pin 12)
 };
 
 int convert_degree_to_pulse_width(int degree) {
@@ -43,10 +43,11 @@ void ServoManager::set_servo_angle(int servo_index, int angle) {
   ESP_LOGI("SERVO", "Setting Servo %d Angle to %d degrees...", servo_index, angle);
   int pulse_width = convert_degree_to_pulse_width(angle);
 
-  // Calculate duty cycle: 13-bit resolution (0 to 8191) for 20ms period (50Hz)
-  // duty = (pulse_width * 8192) / 20000
-  uint32_t duty = (pulse_width * 8192) / 20000;
+  // Calculate duty cycle: inferring resolution and period from configuration
+  uint32_t max_duty = 1 << duty_resolution;
+  uint32_t period_us = MICROSECONDS_PER_SECOND / freq_hz;
+  uint32_t duty = (pulse_width * max_duty) / period_us;
 
-  ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, (ledc_channel_t)servo_index, duty));
-  ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, (ledc_channel_t)servo_index));
+  ESP_ERROR_CHECK(ledc_set_duty(speed_mode, (ledc_channel_t)servo_index, duty));
+  ESP_ERROR_CHECK(ledc_update_duty(speed_mode, (ledc_channel_t)servo_index));
 }
