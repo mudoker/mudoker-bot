@@ -87,8 +87,8 @@
     [ "esp:RX", "$serialMonitor:TX", "", [] ],
     [ "oled1:VCC", "esp:3V3.1", "red", [ "v-28.8", "h-76.65", "v172.8" ] ],
     [ "oled1:GND", "esp:GND.2", "black", [ "v-19.2", "h-57.6", "v124.8", "h115.2" ] ],
-    [ "oled1:SCL", "esp:4", "green", [ "v-38.4", "h-95.7", "v211.2" ] ],
-    [ "oled1:SDA", "esp:5", "gold", [ "v-48", "h-115.13", "v230.4" ] ],
+    [ "oled1:SCL", "esp:1", "green", [] ],
+    [ "oled1:SDA", "esp:2", "gold", [] ],
     [ "servo1:V+", "esp:5V", "red", [] ],
     [ "servo2:V+", "esp:5V", "red", [] ],
     [ "servo3:V+", "esp:5V", "red", [] ],
@@ -105,14 +105,14 @@
     [ "servo6:GND", "esp:GND.1", "#8f4814", [] ],
     [ "servo7:GND", "esp:GND.1", "#8f4814", [] ],
     [ "servo8:GND", "esp:GND.1", "#8f4814", [] ],
-    [ "servo1:PWM", "esp:18", "orange", [] ],
-    [ "servo2:PWM", "esp:1", "orange", [] ],
-    [ "servo3:PWM", "esp:9", "orange", [] ],
-    [ "servo4:PWM", "esp:2", "orange", [] ],
+    [ "servo1:PWM", "esp:4", "orange", [] ],
+    [ "servo2:PWM", "esp:5", "orange", [] ],
+    [ "servo3:PWM", "esp:6", "orange", [] ],
+    [ "servo4:PWM", "esp:7", "orange", [] ],
     [ "servo5:PWM", "esp:10", "orange", [] ],
-    [ "servo6:PWM", "esp:21", "orange", [] ],
-    [ "servo7:PWM", "esp:11", "orange", [] ],
-    [ "servo8:PWM", "esp:47", "orange", [] ]
+    [ "servo6:PWM", "esp:11", "orange", [] ],
+    [ "servo7:PWM", "esp:12", "orange", [] ],
+    [ "servo8:PWM", "esp:13", "orange", [] ]
   ],
   "dependencies": {}
 }
