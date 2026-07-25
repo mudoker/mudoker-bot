@@ -2,14 +2,14 @@
 #include "soc/gpio_num.h"
 
 int servo_pins[SERVO_CNT] = {
-    GPIO_NUM_1,  // Servo 1 (J3 Pin 5)
-    GPIO_NUM_2,  // Servo 2 (J3 Pin 6)
-    GPIO_NUM_42, // Servo 3 (J3 Pin 7)
-    GPIO_NUM_41, // Servo 4 (J3 Pin 8)
-    GPIO_NUM_40, // Servo 5 (J3 Pin 9)
-    GPIO_NUM_39, // Servo 6 (J3 Pin 10)
-    GPIO_NUM_38, // Servo 7 (J3 Pin 11)
-    GPIO_NUM_37  // Servo 8 (J3 Pin 12)
+    GPIO_NUM_4,  // Servo 1
+    GPIO_NUM_5,  // Servo 2
+    GPIO_NUM_6,  // Servo 3
+    GPIO_NUM_7,  // Servo 4
+    GPIO_NUM_10, // Servo 5
+    GPIO_NUM_11, // Servo 6
+    GPIO_NUM_12, // Servo 7
+    GPIO_NUM_13  // Servo 8
 };
 
 int convert_degree_to_pulse_width(int degree) {
