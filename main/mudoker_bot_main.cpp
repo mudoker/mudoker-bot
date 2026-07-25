@@ -20,8 +20,8 @@ void show_face(int *face_index);
 void set_all_servos_angle(int *angle, int *direction);
 
 extern "C" void app_main(void) {
-  i2c_manager.init_i2c_master_bus(I2C_CLK_SRC_DEFAULT, I2C_NUM_0, GPIO_NUM_5,
-                                  GPIO_NUM_4, true);
+  i2c_manager.init_i2c_master_bus(I2C_CLK_SRC_DEFAULT, I2C_NUM_0, GPIO_NUM_2,
+                                  GPIO_NUM_1, true);
 
   ssd13068_screen.init_lcd_panel(i2c_bus_handler);
 
